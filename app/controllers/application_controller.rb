@@ -1,3 +1,4 @@
+class UndefinedComponentError < StandardError; end
 class ApplicationController < ActionController::Base
   layout "application"
   PAGE_COMPONENTS_PATH = "pages/"
@@ -18,7 +19,7 @@ class ApplicationController < ActionController::Base
     layout_path = "layouts/#{self.class.layout_name}"
     layout = path_to_component(layout_path)
 
-    raise "Layout #{path_to_component_name(layout_path)} not found, but required in \#render_component" unless layout
+    raise UndefinedComponentError, "Layout #{path_to_component_name(layout_path)} not found, but required in \#render_component" unless layout
 
     layout.new.with_content(component)
   end
@@ -27,7 +28,7 @@ class ApplicationController < ActionController::Base
     str = render_page_component_with_lyt(component_path, with_layout:)
     return str if str
 
-    raise "Component #{path_to_component_name(component_path)} not found"
+    raise UndefinedComponentError, "Component #{path_to_component_name(component_path)} not found"
   end
 
   def render_page_component(component_path, with_layout: true)
@@ -46,7 +47,7 @@ class ApplicationController < ActionController::Base
 
   def default_render
     render_component_from_action
-  rescue
+  rescue UndefinedComponentError
     Rails.logger.info "Component #{path_to_component_name("#{controller_name}/#{action_name}")} not found, rendering default layout"
     super
   end

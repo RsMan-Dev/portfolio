@@ -47,6 +47,7 @@ export default class ReactiveElement extends HTMLElement {
     const path = Object.keys(ReactiveElement.allComponents).find((path) => ((e) => e[e.length-1])(path.split("/")) === `${name}.tsx`);
     if (!path) throw new Error(`Could not find component with name ${name}`);
     const c = ReactiveElement.loadedComponents[path] || (ReactiveElement.loadedComponents[path] = (await ReactiveElement.allComponents[path]()).default);
+    if(!c) throw new Error(`Could not find component with name ${name}`);
     return c;
   }
 

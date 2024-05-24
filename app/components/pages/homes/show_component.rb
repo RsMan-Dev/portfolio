@@ -1,7 +1,6 @@
 class Pages::Homes::ShowComponent < ViewComponent::Base
+  delegate :reactive_element, to: :helpers
   erb_template <<-ERB
-    <p>
-      We are in view!
-    </p>
+    <%= reactive_element "HomeGame", ssr: false %>
   ERB
 end

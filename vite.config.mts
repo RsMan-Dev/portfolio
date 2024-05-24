@@ -7,6 +7,9 @@ import tailwindcss from 'tailwindcss'
 import tailwindcssNested from 'tailwindcss/nesting'
 import autoprefixer from 'autoprefixer'
 import postcssRenameCustomProperties from "postcss-rename-custom-properties";
+import inspect from "vite-plugin-inspect";
+// @ts-ignore
+import { DOMElements, SVGElements } from "solid-js/web/dist/dev.cjs";
 /*
  * Optimization: will remove sourcemaps and rename custom properties to minimize their size
  */
@@ -76,10 +79,23 @@ export default defineConfig({
       dev: !optimize,
       hot: true,
       solid: {
-        hydratable: false,
-        generate: 'dom',
-        omitNestedClosingTags: false,
-      }
+        moduleName: 'solid-js/web',
+        // @ts-ignore
+        generate: 'dynamic',
+        renderers:[
+          {
+            name: "dom",
+            moduleName: "solid-js/web",
+            elements: [...DOMElements.values(), ...SVGElements.values()],
+          },
+          {
+            name: "universal",
+            moduleName: "solid-three",
+            elements: [],
+          },
+        ]
+      },
     }),
+    inspect(),
   ],
 })
