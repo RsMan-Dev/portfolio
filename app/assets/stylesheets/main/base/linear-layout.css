@@ -1,0 +1,15 @@
+.row{ @apply flex flex-row gap-2; }
+.col{ @apply flex flex-col gap-2; }
+
+.row-center{ @apply .row items-center; }
+.row-start{ @apply .row items-start; }
+.row-end{ @apply .row items-end; }
+.row-stretch{ @apply .row items-stretch; }
+.row-baseline{ @apply .row items-baseline; }
+
+.col-center{ @apply .col items-center; }
+.col-start{ @apply .col items-start; }
+.col-end{ @apply .col items-end; }
+.col-stretch{ @apply .col items-stretch; }
+.col-baseline{ @apply .col items-baseline; }
+

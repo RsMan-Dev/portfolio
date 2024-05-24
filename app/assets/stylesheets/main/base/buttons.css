@@ -1,0 +1,19 @@
+button, [type="button"], [type="submit"], [type="reset"], [class*=" btn"], [class^="btn"] {
+  @apply relative py-1.5 px-4 rounded-md shadow-md bg-primary text-on-primary font-medium border border-primary transition-all;
+  &::after{
+    background: white;
+    @apply content-[""] absolute -inset-px opacity-0 transition-all rounded-md;
+  }
+  &:hover {
+    @apply shadow-lg -translate-y-px;
+    &::after {
+      @apply opacity-15 -bottom-0.5 border-b;
+    }
+  }
+}
+
+.btn-primary { @apply bg-primary text-on-primary border-primary; }
+.btn-secondary { @apply bg-secondary text-on-secondary border-secondary; }
+.btn-background { @apply bg-background text-on-background border-background; }
+.btn-surface { @apply bg-surface text-on-surface border-surface; }
+.btn-border { @apply bg-border text-on-border border-border; }

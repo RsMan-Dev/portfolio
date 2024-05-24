@@ -1,0 +1,40 @@
+@import "base/_index.css" layer(base);
+@import "components/_index.css" layer(components);
+@import "utilities/_index.css" layer(utilities);
+
+:root, ::after, ::before, ::backdrop{
+  --color-primary: 031, 029, 029;
+  --color-primary-accent: 067, 064, 067;
+  --color-on-primary: 250, 248, 248;
+  --color-secondary: 194, 086, 024;
+  --color-secondary-accent: 141, 058, 011;
+  --color-on-secondary: 250, 248, 248;
+  --color-background: 250, 248, 248;
+  --color-on-background: 067, 064, 067;
+  --color-surface: 255, 255, 255;
+  --color-on-surface: 067, 064, 067;
+  --color-outline: 209, 208, 208;
+  --color-on-outline: 067, 064, 067;
+  --color-border: 123, 116, 116;
+  --color-on-border: 250, 248, 248;
+
+  --color-debug: 105, 144, 167;
+  --color-info: 024, 092, 194;
+  --color-error: 190, 040, 040;
+  --color-hard-warn: 096, 035, 016;
+  --color-warn: 234, 179, 008;
+  --color-success: 031, 120, 056;
+}
+
+html{
+  @apply scroll-smooth;
+}
+html, body{
+  @apply h-full; /* ensure the body takes up the full height of the viewport */
+}
+body{
+  @apply text-on-background bg-background col gap-0;
+  main{
+    @apply col p-4 overflow-y-auto;
+  }
+}

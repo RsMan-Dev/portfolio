@@ -1,0 +1,51 @@
+fr:
+  toasts:
+    type:
+      notice: "Information"
+      success: "Succès"
+      warning: "Attention"
+      error: "Erreur"
+
+
+    #profile
+    profile_updated: "Votre profil a été mis à jour avec succès."
+    profile_invalid: "Votre profil n'a pas pu être mis à jour, des erreurs ont été trouvées dans le formulaire."
+
+    #password
+    password_updated: "Votre mot de passe a été mis à jour avec succès, il devient effectif lors de votre prochaine connexion."
+    password_invalid: "Le mot de passe actuel est incorrect."
+    new_password_invalid: "Votre nouveau mot de passe est erroné, veuillez vérifier les erreurs."
+
+    #users
+    user_created: "L'utilisateur a été créé avec succès."
+    user_updated: "L'utilisateur a été mis à jour avec succès."
+    user_deleted: "L'utilisateur a été supprimé avec succès."
+    user_invalid: "L'utilisateur n'a pas pu être créé/modifié, des erreurs ont été trouvées dans le formulaire."
+
+    #auths
+    password_created: "Votre compte a été initialisé avec succès, vous pouvez vous connecter avec votre nouveau mot de passe."
+    code_invalid: "Le code du compte est incorrect."
+    logged_in: "Vous êtes maintenant connecté."
+    logged_out: "Vous avez été déconnecté avec succès."
+    email_or_password_invalid: "L'email ou le mot de passe est incorrect."
+    email_not_found: "L'email n'est pas trouvé."
+    email_send: "Un email de réinitialisation vous a été envoyé à l'adresse email."
+
+    #construction_site
+    construction_site_created: "Le chantier a été créé avec succès."
+    construction_site_updated: "Le chantier a été mis à jour avec succès."
+    construction_site_archived: "Le chantier a été archivé avec succès."
+    construction_site_invalid: "Le chantier n'a pas pu être créé/modifié, des erreurs ont été trouvées dans le formulaire."
+    construction_site_updated_added_time: "Les heures supplémentaires ont été modifiées avec succès."
+    construction_site_ended: "La finalisation du chantier a été effectuée avec succès."
+
+    #planning
+    assignation_created: "Le chantier a été planifié avec succès."
+    assignation_updated: "La planification a été mis à jour avec succès."
+    assignation_deleted: "La planification a été supprimée avec succès."
+    unavailability_created: "L'indisponibilité a été créée avec succès."
+    unavailability_updated: "L'indisponibilité a été mise à jour avec succès."
+    unavailability_deleted: "L'indisponibilité a été supprimée avec succès."
+
+
+

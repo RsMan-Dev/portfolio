@@ -1,0 +1,117 @@
+.toasts {
+  @apply relative;
+  #toasts {
+    @apply absolute;
+  }
+}
+
+#toasts {
+  @apply z-50 pointer-events-none fixed top-0 bottom-0 left-0 right-0 gap-5 p-5 overflow-hidden flex flex-col;
+  reactive-element[name="Toast"]{
+    @apply flex gap-3 pointer-events-auto text-on-background bg-background rounded-lg w-fit drop-shadow-lg hover:drop-shadow-xl overflow-hidden;
+
+    &>div.progress-dismiss{
+      --timeout: 3000ms;
+      @apply absolute bottom-0 left-0 w-full h-1 bg-primary;
+      transition: width var(--timeout) linear;
+      &.show{
+        @apply w-0;
+      }
+    }
+
+    & > .toast-icon {
+      @apply rounded-l-lg m-0 flex items-center justify-center;
+      &:before {
+        @apply m-4 text-3xl;
+      }
+    }
+
+    @apply transition-all duration-500;
+
+    &[align=right] {
+      @apply self-end;
+      transform: translateX(calc(100% + 1.25rem));
+      &[open] {
+        transform: translateX(0);
+      }
+      &[animate-open] {
+        animation: open-toast 0.5s ease-in-out forwards;
+      }
+    }
+
+    &[align=left] {
+      @apply self-start;
+      transform: translateX(calc(-100% - 1.25rem));
+      &[open] {
+        transform: translateX(0);
+      }
+      &[animate-open] {
+        animation: open-toast-left 0.5s ease-in-out forwards;
+      }
+    }
+
+    &[type=info], &[type=notice], &[type=success] {
+      &>div.progress-dismiss{
+        @apply bg-success;
+      }
+      & > .toast-icon {
+        @apply bg-success bg-opacity-5;
+        &:before {
+          @apply text-success border-success;
+          content: "✓"
+        }
+      }
+    }
+
+    &[type=warning] {
+      &>div.progress-dismiss{
+        @apply bg-warn;
+      }
+      & > .toast-icon {
+        @apply bg-warn bg-opacity-5;
+        &:before {
+          @apply text-warn border-warn;
+          content: "⚠"
+        }
+      }
+    }
+
+    &[type=error] {
+      &>div.progress-dismiss{
+        @apply bg-error;
+      }
+      & > .toast-icon {
+        @apply bg-error bg-opacity-5;
+        &:before {
+          @apply text-error border-error;
+          content: "×"
+        }
+      }
+    }
+
+    & > .toast-content {
+      @apply flex-1 my-3 mr-16 text-start;
+
+      & > span {
+        @apply font-bold;
+      }
+    }
+
+    & > button {
+      @apply text-lg absolute top-0 right-0 bg-transparent text-inherit border-none p-2 aspect-[1] w-10 h-10 shadow-none translate-y-0;
+      &::before{
+        content: "×";
+      }
+    }
+  }
+
+}
+
+@keyframes open-toast {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes open-toast-left {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
