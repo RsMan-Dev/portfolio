@@ -1,16 +1,22 @@
 import {PluginOption, UserConfig} from "vite";
-import MagicString from 'magic-string';
-
-import rollup, {RollupOptions} from "rollup";
-import resolver from '@rollup/plugin-node-resolve';
-import babelPl from "@rollup/plugin-babel";
-import * as fs from "fs";
+import {RollupCache, RollupOptions} from "rollup";
+import MagicString from "magic-string";
+import {rollup} from "rollup";
+import fs from "fs";
+import {nodeResolve} from "@rollup/plugin-node-resolve";
+import {babel} from "@rollup/plugin-babel";
 import json from "@rollup/plugin-json";
+// @ts-ignore
+import pluginModuleResolver from "babel-plugin-module-resolver";
+// @ts-ignore
+import presetTypescript from "@babel/preset-typescript";
+// @ts-ignore
+import presetSolid from "babel-preset-solid";
 
 function loadJsxTsxFilesRecursivelyFromDir(dir: string, subDir = "", names: string[] = []): [string, string[]] {
   let included = "";
   function cPath(...paths: string[]) { return paths.join("/").replace(/\/+/g, "/") }
-  fs.readdirSync(cPath(dir, subDir)).forEach((file) => {
+  fs.readdirSync(cPath(dir, subDir)).forEach((file :string) => {
     //load sub files if directory
     if (fs.lstatSync(cPath(dir, subDir, file)).isDirectory()) {
       const [i, n] = loadJsxTsxFilesRecursivelyFromDir(dir, subDir + file + "/", names);
@@ -40,10 +46,10 @@ export default function (
 ): PluginOption {
   let compiling = false;
   let commandUsed = null as string | null;
-  let cache = undefined as rollup.RollupCache | undefined;
+  let cache = undefined as RollupCache | undefined;
 
   const rollupConfig: RollupOptions = {
-    input: filePath, output: {file: outputFilePath, compact: true, format: "cjs"},
+    input: filePath, output: {file: outputFilePath, compact: true, format: "cjs", inlineDynamicImports: true},
     plugins: [
       // import all jsx and tsx files from the components directory to have them available in the server side code
       { name: "concat-jsx-files-to-file", async transform(code, id) {
@@ -68,14 +74,14 @@ export default function (
         return {code: s.toString(), moduleSideEffects: 'no-treeshake', map: s.generateMap()};
       }},
       // used to resolve node_modules, and include dependencies in the server side code, slowest part of the build
-      resolver({ browser: false, preferBuiltins: true, extensions: [".js", ".jsx", ".ts", ".tsx"] }),
+      nodeResolve({ browser: false, preferBuiltins: true, extensions: [".js", ".jsx", ".ts", ".tsx"] }),
       // compile ts and tsx files to js using solid-js library
-      babelPl({ sourceMaps: false, extensions: [".ts", ".tsx"], skipPreflightCheck: true,
+      babel({ sourceMaps: false, extensions: [".ts", ".tsx"], skipPreflightCheck: true,
         babelHelpers: "bundled", minified: true, targets: {node: "current"},
         // replace solid-js/web with solid-js/web/dist/server.js to force having the server side version of the library
-        plugins: [ ["babel-plugin-module-resolver", {"alias": {"solid-js/web": "solid-js/web/dist/server.js"}}] ],
+        plugins: [ [pluginModuleResolver.default, {"alias": {"solid-js/web": "solid-js/web/dist/server.js"}}] ],
         // use of typescript to transpile js and solid-js library to transpile the jsx
-        presets: [ ["@babel/preset-typescript"], ["solid", {generate: "ssr", hydratable: false}] ]
+        presets: [ presetTypescript.default, [presetSolid, {generate: "ssr", hydratable: false}] ]
       }),
       // include json files in the server side code, for translations or other data
       json()
@@ -86,7 +92,7 @@ export default function (
     if (compiling) return; compiling = true;
     console.log("[Vite Plugin SSR] Compiling server side components...");
     try {
-      const res = await rollup.rollup({ ...rollupConfig, cache: cache ?? true })
+      const res = await rollup({ ...rollupConfig, cache: cache ?? true })
       await res.write(rollupConfig.output as any);
       cache = res.cache;
       await res.close().then(() => compiling = false);
@@ -108,7 +114,7 @@ export default function (
         if(Array.isArray(i))
           config.build.rollupOptions.input = i.reduce<Record<string, string>>((acc, v) => {acc[v] = __dirname + "/" + v; return acc}, {});
       }
-      (config.build.rollupOptions.input as Record<string, string>)[filePath] = __dirname + "/" + filePath;
+      (config.build.rollupOptions.input as Record<string, string>)[filePath] = filePath;
       return config;
     },
 

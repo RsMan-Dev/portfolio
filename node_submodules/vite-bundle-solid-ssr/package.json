@@ -4,7 +4,13 @@
   "description": "A simple plugin for vite to bundle solid-js components in a big bundle for server side rendering using mini-racer or other ssr engines",
   "author": "William RICHER (RsMan)",
   "module": "index.js",
-  "type": "commonjs",
+  "type": "module",
+  "devDependencies": {
+    "typescript": "^5.5.2"
+  },
+  "scripts": {
+    "tsc": "tsc"
+  },
   "dependencies": {
     "@babel/core": "^7.24.0",
     "@babel/plugin-transform-runtime": "^7.24.0",

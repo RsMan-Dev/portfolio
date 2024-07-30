@@ -3,9 +3,10 @@
 module Templates
   module Homes
     class ShowComponent < ViewComponent::Base
+      delegate :reactive_element, to: :helpers
 
       erb_template <<~ERB
-        <h1>Hello, World!</h1>
+        <%= reactive_element "Fish" %>
       ERB
     end
   end

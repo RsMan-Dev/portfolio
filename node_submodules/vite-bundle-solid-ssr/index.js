@@ -1,37 +1,15 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const magic_string_1 = __importDefault(require("magic-string"));
-const rollup_1 = __importDefault(require("rollup"));
-const plugin_node_resolve_1 = __importDefault(require("@rollup/plugin-node-resolve"));
-const plugin_babel_1 = __importDefault(require("@rollup/plugin-babel"));
-const fs = __importStar(require("fs"));
-const plugin_json_1 = __importDefault(require("@rollup/plugin-json"));
+import MagicString from "magic-string";
+import { rollup } from "rollup";
+import fs from "fs";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import { babel } from "@rollup/plugin-babel";
+import json from "@rollup/plugin-json";
+// @ts-ignore
+import pluginModuleResolver from "babel-plugin-module-resolver";
+// @ts-ignore
+import presetTypescript from "@babel/preset-typescript";
+// @ts-ignore
+import presetSolid from "babel-preset-solid";
 function loadJsxTsxFilesRecursivelyFromDir(dir, subDir = "", names = []) {
     let included = "";
     function cPath(...paths) { return paths.join("/").replace(/\/+/g, "/"); }
@@ -58,26 +36,26 @@ function loadJsxTsxFilesRecursivelyFromDir(dir, subDir = "", names = []) {
  * @param {string} outputFilePath - path to the output file, where the server side code will be written
  * @param {string} componentsPath - path to the components directory, will be used to include all the jsx and tsx files recursively
  */
-function default_1(filePath, outputFilePath, componentsPath) {
+export default function (filePath, outputFilePath, componentsPath) {
     let compiling = false;
     let commandUsed = null;
     let cache = undefined;
     const rollupConfig = {
-        input: filePath, output: { file: outputFilePath, compact: true, format: "cjs" },
+        input: filePath, output: { file: outputFilePath, compact: true, format: "cjs", inlineDynamicImports: true },
         plugins: [
             // import all jsx and tsx files from the components directory to have them available in the server side code
             { name: "concat-jsx-files-to-file", async transform(code, id) {
                     if (!id.includes(filePath))
                         return;
                     let [included, names] = loadJsxTsxFilesRecursivelyFromDir(componentsPath);
-                    const s = new magic_string_1.default(code).prepend(included).prepend(`const comps = {${names.join(",")}};\n`);
+                    const s = new MagicString(code).prepend(included).prepend(`const comps = {${names.join(",")}};\n`);
                     return { code: s.toString(), moduleSideEffects: 'no-treeshake', map: s.generateMap() };
                 } },
             // add renderComponent function
             { name: "add-render-component", async transform(code, id) {
                     if (!id.includes(filePath))
                         return;
-                    const s = new magic_string_1.default(code).append(`
+                    const s = new MagicString(code).append(`
           import {renderToString} from "solid-js/web";
 
           //@ts-ignore renderComponent will be defined used only in server, no need to type it
@@ -90,17 +68,17 @@ function default_1(filePath, outputFilePath, componentsPath) {
                     return { code: s.toString(), moduleSideEffects: 'no-treeshake', map: s.generateMap() };
                 } },
             // used to resolve node_modules, and include dependencies in the server side code, slowest part of the build
-            (0, plugin_node_resolve_1.default)({ browser: false, preferBuiltins: true, extensions: [".js", ".jsx", ".ts", ".tsx"] }),
+            nodeResolve({ browser: false, preferBuiltins: true, extensions: [".js", ".jsx", ".ts", ".tsx"] }),
             // compile ts and tsx files to js using solid-js library
-            (0, plugin_babel_1.default)({ sourceMaps: false, extensions: [".ts", ".tsx"], skipPreflightCheck: true,
+            babel({ sourceMaps: false, extensions: [".ts", ".tsx"], skipPreflightCheck: true,
                 babelHelpers: "bundled", minified: true, targets: { node: "current" },
                 // replace solid-js/web with solid-js/web/dist/server.js to force having the server side version of the library
-                plugins: [["babel-plugin-module-resolver", { "alias": { "solid-js/web": "solid-js/web/dist/server.js" } }]],
+                plugins: [[pluginModuleResolver.default, { "alias": { "solid-js/web": "solid-js/web/dist/server.js" } }]],
                 // use of typescript to transpile js and solid-js library to transpile the jsx
-                presets: [["@babel/preset-typescript"], ["solid", { generate: "ssr", hydratable: false }]]
+                presets: [presetTypescript.default, [presetSolid, { generate: "ssr", hydratable: false }]]
             }),
             // include json files in the server side code, for translations or other data
-            (0, plugin_json_1.default)()
+            json()
         ]
     };
     async function compile() {
@@ -109,7 +87,7 @@ function default_1(filePath, outputFilePath, componentsPath) {
         compiling = true;
         console.log("[Vite Plugin SSR] Compiling server side components...");
         try {
-            const res = await rollup_1.default.rollup({ ...rollupConfig, cache: cache ?? true });
+            const res = await rollup({ ...rollupConfig, cache: cache ?? true });
             await res.write(rollupConfig.output);
             cache = res.cache;
             await res.close().then(() => compiling = false);
@@ -132,7 +110,7 @@ function default_1(filePath, outputFilePath, componentsPath) {
                 if (Array.isArray(i))
                     config.build.rollupOptions.input = i.reduce((acc, v) => { acc[v] = __dirname + "/" + v; return acc; }, {});
             }
-            config.build.rollupOptions.input[filePath] = __dirname + "/" + filePath;
+            config.build.rollupOptions.input[filePath] = filePath;
             return config;
         },
         async buildStart() {
@@ -152,4 +130,3 @@ function default_1(filePath, outputFilePath, componentsPath) {
         }
     };
 }
-exports.default = default_1;

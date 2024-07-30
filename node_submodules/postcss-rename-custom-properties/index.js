@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 // Constants
 const USABLE_LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'.split('');
 const CUSTOM_PROPERTY_REGEX = /--[\w-]+/g;
@@ -54,4 +52,4 @@ const plugin = (opts = {}) => {
     };
 };
 plugin.postcss = true;
-module.exports = plugin;
+export default plugin;

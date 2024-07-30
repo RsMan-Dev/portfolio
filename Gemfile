@@ -71,3 +71,7 @@ gem "vite_rails", "~> 3.0"
 gem "view_component", "~> 3.12"
 
 gem "dotenv-rails", "~> 3.1"
+
+gem "execjs", "~> 2.9"
+
+gem "mini_racer", "~> 0.13.0"

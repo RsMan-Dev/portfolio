@@ -941,6 +941,36 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
+      <library name="execjs (v2.9.1) [path][gem]" type="rubylib">
+        <properties>
+          <option name="additionalInfo">
+            <AdditionalInfo>
+              <option name="authors" value="N/A" />
+              <option name="email" value="N/A" />
+              <option name="homepage" value="N/A" />
+              <option name="summary" value="N/A" />
+            </AdditionalInfo>
+          </option>
+          <option name="fromPath" value="true" />
+          <option name="name" value="execjs" />
+          <option name="requirePaths">
+            <list>
+              <option value="lib" />
+            </list>
+          </option>
+          <option name="url" value="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/execjs-2.9.1" />
+          <option name="version" value="2.9.1" />
+        </properties>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/execjs-2.9.1/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/execjs-2.9.1/lib" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
       <library name="globalid (v1.2.1) [path][gem]" type="rubylib">
         <properties>
           <option name="additionalInfo">
@@ -1105,6 +1135,43 @@
           <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/jbuilder-2.12.0/test" />
           <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/jbuilder-2.12.0/.github" />
           <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/jbuilder-2.12.0/gemfiles" />
+        </excluded>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="libv8-node (v22.5.1.0) [path][gem]" type="rubylib">
+        <properties>
+          <option name="additionalInfo">
+            <AdditionalInfo>
+              <option name="authors" value="N/A" />
+              <option name="email" value="N/A" />
+              <option name="homepage" value="N/A" />
+              <option name="summary" value="N/A" />
+            </AdditionalInfo>
+          </option>
+          <option name="fromPath" value="true" />
+          <option name="name" value="libv8-node" />
+          <option name="requirePaths">
+            <list>
+              <option value="lib" />
+            </list>
+          </option>
+          <option name="url" value="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/libv8-node-22.5.1.0-x86_64-linux" />
+          <option name="version" value="22.5.1.0" />
+        </properties>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/libv8-node-22.5.1.0-x86_64-linux/ext" />
+          <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/libv8-node-22.5.1.0-x86_64-linux/lib" />
+          <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/libv8-node-22.5.1.0-x86_64-linux/vendor" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/libv8-node-22.5.1.0-x86_64-linux/ext" />
+          <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/libv8-node-22.5.1.0-x86_64-linux/lib" />
+          <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/libv8-node-22.5.1.0-x86_64-linux/vendor" />
+        </SOURCES>
+        <excluded>
+          <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/libv8-node-22.5.1.0-x86_64-linux/ext" />
         </excluded>
       </library>
     </orderEntry>
@@ -1301,6 +1368,41 @@
           <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/mini_mime-1.1.5/bin" />
           <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/mini_mime-1.1.5/bench" />
           <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/mini_mime-1.1.5/.github" />
+        </excluded>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="mini_racer (v0.13.0) [path][gem]" type="rubylib">
+        <properties>
+          <option name="additionalInfo">
+            <AdditionalInfo>
+              <option name="authors" value="N/A" />
+              <option name="email" value="N/A" />
+              <option name="homepage" value="N/A" />
+              <option name="summary" value="N/A" />
+            </AdditionalInfo>
+          </option>
+          <option name="fromPath" value="true" />
+          <option name="name" value="mini_racer" />
+          <option name="requirePaths">
+            <list>
+              <option value="lib" />
+            </list>
+          </option>
+          <option name="url" value="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/mini_racer-0.13.0" />
+          <option name="version" value="0.13.0" />
+        </properties>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/mini_racer-0.13.0/ext" />
+          <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/mini_racer-0.13.0/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/mini_racer-0.13.0/ext" />
+          <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/mini_racer-0.13.0/lib" />
+        </SOURCES>
+        <excluded>
+          <root url="file://$MODULE_DIR$/vendor/bundle/ruby/3.3.0/gems/mini_racer-0.13.0/ext" />
         </excluded>
       </library>
     </orderEntry>

@@ -63,4 +63,4 @@ const plugin: PluginCreator<any> = (opts: { safeList?: string[] } = {}) => {
 };
 plugin.postcss = true;
 
-module.exports = plugin;
+export default plugin;

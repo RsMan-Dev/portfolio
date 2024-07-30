@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A simple plugin for postcss to shorten the css custom properties names",
   "module": "index.js",
-  "type": "commonjs",
+  "type": "module",
   "author": "William RICHER (RsMan)",
   "dependencies": {
     "postcss": "^8.4.35",
