@@ -1,0 +1,16 @@
+{
+  "entrypoints/application.css": {
+    "file": "assets/application-l0sNRNKZ.js",
+    "name": "entrypoints/application.css",
+    "src": "entrypoints/application.css",
+    "isEntry": true,
+    "integrity": "sha384-7GZOiJ7WwbJ2PKz3iZ2Vt/NHNz65guUjQZ/uo6o2LYkbO/Al8pImelhUBJCReJw+"
+  },
+  "entrypoints/application.ts": {
+    "file": "assets/application-CYccAEqE.js",
+    "name": "entrypoints/application.ts",
+    "src": "entrypoints/application.ts",
+    "isEntry": true,
+    "integrity": "sha384-WYczLaLdjM0WWSIReDbHWhyf/5BxH2sN96wup6aeAyZU1cAGFkh6enZ2iChCEAJF"
+  }
+}
