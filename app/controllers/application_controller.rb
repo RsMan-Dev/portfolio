@@ -1,54 +1,32 @@
-class UndefinedComponentError < StandardError; end
 class ApplicationController < ActionController::Base
+  class << self
+    attr_writer :layout_name
+
+    def layout_name
+      @layout_name ||= "application"
+    end
+
+    def self.layout(name, **options)
+      self.layout_name = name
+      super(name, **options)
+    end
+  end
   layout "application"
-  PAGE_COMPONENTS_PATH = "pages/"
 
-  def self.layout_name = @layout_name ||= "application"
-  def self.layout(layout, **options)
-    @layout_name = layout
-    super(layout, **options)
-  end
+  def template_path = "Templates::"
 
-  def path_to_component_name(path) = "#{PAGE_COMPONENTS_PATH}#{path}_component".split('/').map(&:camelcase).join("::")
-  def path_to_component(path) = path_to_component_name(path).safe_constantize
-  def render_page_component_with_lyt(component_path, with_layout: true)
-    component = path_to_component(component_path)&.new
+  def controller_name_to_constant = controller_name.split("/").map(&:camelize).join("::")
 
-    return component unless with_layout && component
+  def component_name = "#{template_path}#{controller_name_to_constant}::#{action_name.camelize}Component"
 
-    layout_path = "layouts/#{self.class.layout_name}"
-    layout = path_to_component(layout_path)
+  def layout_component_name = "#{template_path}Layouts::#{self.class.layout_name.camelize}Component"
 
-    raise UndefinedComponentError, "Layout #{path_to_component_name(layout_path)} not found, but required in \#render_component" unless layout
-
-    layout.new.with_content(component)
-  end
-
-  def render_page_component_with_lyt!(component_path, with_layout: true)
-    str = render_page_component_with_lyt(component_path, with_layout:)
-    return str if str
-
-    raise UndefinedComponentError, "Component #{path_to_component_name(component_path)} not found"
-  end
-
-  def render_page_component(component_path, with_layout: true)
-    comp = render_page_component_with_lyt(component_path, with_layout:)
-    render comp, layout: !with_layout if str
-  end
-
-  def render_page_component!(component_path, with_layout: true)
-    comp = render_page_component_with_lyt!(component_path, with_layout:)
-    render comp, layout: !with_layout
-  end
-
-  def render_component_from_action(with_layout: true)
-    render_page_component!("#{controller_name}/#{action_name}", with_layout:)
-  end
-
+  #wants to render a view component instead of a layout
   def default_render
-    render_component_from_action
-  rescue UndefinedComponentError
-    Rails.logger.info "Component #{path_to_component_name("#{controller_name}/#{action_name}")} not found, rendering default layout"
-    super
+    @component = component_name.constantize.new
+    @layout = layout_component_name.constantize.new
+
+    render @layout.with_content(@component),
+      layout: false
   end
 end
