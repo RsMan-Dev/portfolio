@@ -78,8 +78,8 @@ export function store<T extends {}, U>(initialValue: Storable<T, U>, {signalFilt
       out[k] = initialValue[k] as any
     } else if(typeof initialValue[k] === 'function') {
       let cb = (initialValue[k] as any).bind(out)
-      const [_s, __s] = createSignal(cb(undefined, parent))
-      createRoot(() => createEffect(() => {__s(cb(untrack(_s), parent))})) // created in new root because nested effect not fired
+      let _s = createMemo((V) => cb(V, parent))
+      // createRoot(() => createEffect(() => {__s(cb(untrack(_s), parent))})) // created in new root because nested effect not fired
       Object.defineProperty(out, k, {
         get: () => _s(),
         set: (v: any) => {if(typeof v == "function") cb = v.bind(out)},
