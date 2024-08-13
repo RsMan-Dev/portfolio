@@ -270,10 +270,9 @@ export default function Animal({color, borderColor, dots, dotDistance, at, adds,
       <svg>
         <defs>
           <filter id="disFilter">
-            <feTurbulence type="turbulence" baseFrequency="0.005" numOctaves="3" seed="2" result="turbulence">
-              <feColorMatrix in="cloudbase" type="hueRotate" values="0" result="cloud">
-                <animate attributeName="values" from="0" to="360" dur="20s" repeatCount="indefinite"/>
-              </feColorMatrix>
+            <feTurbulence type="turbulence" baseFrequency="0.005" numOctaves="3" seed="3" result="turbulence">
+              <animate attributeName="baseFrequency" values="0.003;0.001;0.003;" dur="30s" begin="0.1s"
+                       repeatCount="indefinite"/>
             </feTurbulence>
             <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="30" xChannelSelector="R" yChannelSelector="B"
                                result="displacement"/>
