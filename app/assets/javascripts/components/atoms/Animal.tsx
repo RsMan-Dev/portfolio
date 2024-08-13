@@ -1,7 +1,7 @@
 import {computed, CustomStore, signal, Storable, unindexedArrayStore} from "../utils/signal";
 import {throttle} from "../../utils/debounce_and_throttle";
 import {isServer} from "solid-js/web";
-import {batch, createComputed, createEffect, createRenderEffect, untrack} from "solid-js";
+import {batch, createComputed, createEffect, createRenderEffect, onCleanup, untrack} from "solid-js";
 
 type Position = {x: number, y: number}
 
@@ -39,6 +39,8 @@ export default function Animal({color, borderColor, dots, dotDistance, at, adds,
   const position = signal(at || {x: window.innerWidth / 2, y: -50})
   const target = signal(position())
   const body = unindexedArrayStore([] as BodyPart[]);
+  const frameTimes = signal([] as number[]);
+  const fps = computed(() => 1000 / (frameTimes().reduce((a, b) => a + b, 0) / frameTimes().length))
 
   const debug = false
 
@@ -113,8 +115,8 @@ export default function Animal({color, borderColor, dots, dotDistance, at, adds,
       frameCount++
       const pos = position.peek()
       const tar = target.peek()
-      const targetX = Math.round(lerp(pos.x, tar.x,  wasAnAutoMove ? 0.01 : 0.8) * 100) / 100
-      const targetY = Math.round(lerp(pos.y, tar.y, wasAnAutoMove ? 0.01 : 0.8) * 100) / 100
+      const targetX = Math.round(lerp(pos.x, tar.x,  wasAnAutoMove ? 0.01 : 1) * 100) / 100
+      const targetY = Math.round(lerp(pos.y, tar.y, wasAnAutoMove ? 0.01 : 1) * 100) / 100
       if(position.peek().x == targetX && position.peek().y == targetY) return
       position({x: targetX, y: targetY})
     })
@@ -131,9 +133,13 @@ export default function Animal({color, borderColor, dots, dotDistance, at, adds,
     }
   }
   function af(){
+    const start = performance.now()
     frame()
     if(disposed) return
     requestAnimationFrame(af)
+    frameTimes().push(performance.now() - start)
+    if(frameTimes().length > 100) frameTimes().shift()
+    frameTimes([...frameTimes()])
   }
   if(!isServer) createEffect(() => {
     untrack(() => {
@@ -143,6 +149,8 @@ export default function Animal({color, borderColor, dots, dotDistance, at, adds,
       disposed = true
     }
   })
+
+  onCleanup(() => disposed = true)
 
   createRenderEffect(() => {
     target({x: window.innerWidth / 2, y: window.innerHeight / 2})
@@ -254,16 +262,45 @@ export default function Animal({color, borderColor, dots, dotDistance, at, adds,
 
   return <>
     <div
-      style={{height: "100%", position: "relative", "z-index": 1}}
+      style={{height: "100%", position: "relative", "z-index": 1, overflow: "hidden"}}
       onMouseMove={(e) => {  move(e.clientX, e.clientY) }}
       onTouchMove={(e) => { move(e.touches[0].clientX, e.touches[0].clientY) }}
     >
+      <span class="text-background">{fps()}</span>
+      <svg>
+        <defs>
+          <filter id="disFilter">
+            <feTurbulence type="turbulence" baseFrequency="0.005" numOctaves="3" seed="2" result="turbulence">
+              <feColorMatrix in="cloudbase" type="hueRotate" values="0" result="cloud">
+                <animate attributeName="values" from="0" to="360" dur="20s" repeatCount="indefinite"/>
+              </feColorMatrix>
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="30" xChannelSelector="R" yChannelSelector="B"
+                               result="displacement"/>
+          </filter>
+        </defs>
+      </svg>
+
       <svg
-        style={{position: "absolute", top: 0, left: 0}}
+        style={{position: "absolute", top: -40, left: -40}}
         viewBox={`0 0 ${window.innerWidth} ${window.innerHeight}`}
-        width={window.innerWidth}
-        height={window.innerHeight}
+        width={window.innerWidth + 80}
+        height={window.innerHeight + 80}
+        style={{
+          filter: "url(#disFilter)"
+        }}
       >
+        <image
+          href="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/d76efdee-440d-4311-bce2-1212c60390bc/dcatyft-3d286c66-03cc-448e-b8d8-a4f0a3a2fc26.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2Q3NmVmZGVlLTQ0MGQtNDMxMS1iY2UyLTEyMTJjNjAzOTBiY1wvZGNhdHlmdC0zZDI4NmM2Ni0wM2NjLTQ0OGUtYjhkOC1hNGYwYTNhMmZjMjYucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0._nmkp-pxZ-_7xepKEpb7GrQuNeJdUtX-48E4DA6_IVg"
+          x="0"
+          y="0"
+          preserveAspectRatio="none"
+          width="100%"
+          height="100%"
+          style={{
+            filter: "brightness(0.5) contrast(1) saturate(1.5) blur(2px) grayscale(0.5) opacity(0.75)"
+          }}
+          ></image>
         <path
           d={bodySvgPath()}
           fill={color}
@@ -278,7 +315,8 @@ export default function Animal({color, borderColor, dots, dotDistance, at, adds,
 
         {debug && <>
           {body().map((b, i) => <>
-            <text x={b.position.x} y={b.position.y} fill="red" text-anchor="middle" alignment-baseline="central">{i}</text>
+            <text x={b.position.x} y={b.position.y} fill="red" text-anchor="middle"
+                  alignment-baseline="central">{i}</text>
             <circle cx={b.position.cardinal.front?.x} cy={b.position.cardinal.front?.y} r={2} fill="white"/>
             <circle cx={b.position.cardinal.frontRight?.x} cy={b.position.cardinal.frontRight?.y} r={2} fill="white"/>
             <circle cx={b.position.cardinal.right.x} cy={b.position.cardinal.right.y} r={2} fill="white"/>
