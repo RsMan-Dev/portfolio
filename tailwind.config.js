@@ -38,5 +38,21 @@ module.exports = {
           ].map(e => [e, withOpacity(`--color-${e}`)])
         ]
     ),
+
+    keyframes: {
+      "fade-out": {
+        from: {opacity: '1'},
+        to: {opacity: '0'},
+      },
+      "fade-in": {
+        from: {opacity: '0'},
+        to: {opacity: '1'},
+      },
+    },
+    animation: {
+      "fade-in": 'fade-in .2s ease-in-out normal',
+      "fade-in-slow": 'fade-in 1s ease-in-out normal',
+      "fade-out": 'fade-out .2s ease-in-out normal',
+    },
   }
 }
