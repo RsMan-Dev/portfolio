@@ -1,0 +1,53 @@
+/*noinspection CssInvalidAtRule*/
+@unocss;
+
+html{
+    @apply h-full;
+}
+body{
+    --grid-size: 80px;
+    --grid-color: #CCCCCC;
+    --bg-color: theme('colors.background');
+    @apply min-h-full m-0 font-sans relative;
+    background-image:
+            linear-gradient(var(--grid-color),transparent 1px,transparent),
+            linear-gradient(90deg,var(--grid-color),transparent 1px,transparent),
+            linear-gradient(var(--bg-color),var(--bg-color));
+    background-size: var(--grid-size) var(--grid-size);
+    background-position: -1px -1px;
+    &::before{
+        content: "";
+        @apply fixed inset-0;
+        background-image: radial-gradient(transparent 50%, var(--bg-color));
+    }
+    >*{
+        @apply relative;
+    }
+}
+a{
+    @apply text-secondary no-underline cursor-none;
+}
+
+nav{
+    @apply flex items-center gap-8 px-12 py-4 justify-end fixed top-0 inset-x-0 z-2147483646 text-xl backdrop-blur-lg lt-md:text-base h-8;
+}
+
+@property --animation-var {
+    syntax: "<number>";
+    initial-value: 0;
+    inherits: true;
+}
+@property --animation-var-rev {
+    syntax: "<number>";
+    initial-value: 1;
+    inherits: true;
+}
+
+@keyframes animation-var {
+    0% { --animation-var: 0; --animation-var-rev: 1; }
+    100% { --animation-var: 1; --animation-var-rev: 0; }
+}
+
+h1{
+    @apply font-bold color-primary m-0;
+}

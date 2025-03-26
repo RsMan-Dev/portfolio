@@ -1,0 +1,24 @@
+div.land{
+    @apply h-100vh;
+    animation: animation-var ease-in-out both;
+    /*noinspection CssInvalidFunction,CssUnknownProperty*/
+    animation-timeline: view();
+    /*noinspection CssInvalidFunction,CssUnknownProperty*/
+    animation-range: contain 0% cover 100%;
+    >div{
+        @apply flex items-center justify-center fixed whitespace-nowrap;
+        top: calc(1rem + (50% - 1rem) * var(--animation-var-rev));
+        left: calc(1rem + (50% - 1rem) * var(--animation-var-rev));
+        gap: calc(1rem + 2rem * var(--animation-var-rev));
+
+        transform: translate(calc(-50% * var(--animation-var-rev)), calc(-50% * var(--animation-var-rev)));
+        >h1{
+            @apply font-bold color-primary;
+            font-size: calc(1.25rem + 4rem * var(--animation-var-rev));
+        }
+        >img{
+            @apply rounded-full;
+            width: calc(3rem + 15rem * var(--animation-var-rev));
+        }
+    }
+}

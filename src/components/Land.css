@@ -1,0 +1,45 @@
+div.land{
+    @apply h-100vh;
+    animation: animation-var ease-in-out both;
+    /*noinspection CssInvalidFunction,CssUnknownProperty*/
+    animation-timeline: view();
+    /*noinspection CssInvalidFunction,CssUnknownProperty*/
+    animation-range: contain 0% cover 100%;
+    >div{
+        @apply flex items-center justify-center fixed whitespace-nowrap;
+        top: calc(1.5rem + (50% - 1.5rem) * var(--animation-var-rev));
+        left: calc(3rem + (50% - 3rem) * var(--animation-var-rev));
+        --gap: calc(1rem + 2rem * var(--animation-var-rev));
+
+        transform: translate(calc(-50% * var(--animation-var-rev)), calc(-50% * var(--animation-var-rev)));
+
+        --img-width: calc(2.5rem + 15rem * var(--animation-var-rev));
+        --padding: calc(var(--img-width) + var(--gap));
+        >h1{
+            @apply leading-none;
+            font-size: calc(1.25rem + 4rem * var(--animation-var-rev));
+            padding-left: calc(var(--img-width) + var(--gap));
+            @media screen and (max-width: 1024px){
+                padding-left: calc(var(--padding) * var(--animation-var));
+                padding-top: calc(var(--padding) * var(--animation-var-rev));
+                font-size: calc(1.25rem + 2rem * var(--animation-var-rev));
+            }
+            @media screen and (max-width: 768px){
+                font-size: calc(1.25rem + 1.4rem * var(--animation-var-rev));
+            }
+        }
+        >img{
+            @apply rounded-full absolute;
+            width: var(--img-width);
+
+            @media screen and (min-width: 1024px){
+                @apply left-0 top-1/2 -translate-y-1/2;
+            }
+            @media screen and (max-width: 1024px){
+                left: calc(50% * var(--animation-var-rev));
+                top: calc(50% * var(--animation-var));
+                transform: translate(calc(-50% * var(--animation-var-rev)), calc(-50% * var(--animation-var)));
+            }
+        }
+    }
+}
